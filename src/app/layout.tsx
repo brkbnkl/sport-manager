@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit, Inter } from "next/font/google";
+
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({
+    subsets: ["latin"],
+    variable: '--font-outfit',
+});
+
+const inter = Inter({
+    subsets: ["latin"],
+    variable: '--font-inter',
+});
+
 
 export const metadata: Metadata = {
-    title: "FitTrack Pro - Your Personal Workout Manager",
-    description: "Track your workouts, monitor progress, and achieve your fitness goals with personalized workout plans.",
+    title: "FitTrack Pro",
+    description: "Personalized Workout Planner",
     keywords: "fitness, workout, exercise, gym, training, health",
 };
 
@@ -16,12 +26,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="tr">
+        <html lang="en">
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             </head>
-            <body className={inter.className}>{children}</body>
+            <body className={`${outfit.variable} ${inter.variable} font-inter antialiased`}>{children}</body>
         </html>
     );
 }

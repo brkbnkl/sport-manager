@@ -1,9 +1,13 @@
+import { Language, translations } from '@/utils/translations';
+
 interface HeroProps {
     onGetStarted: () => void;
     isAuthenticated: boolean;
+    lang: Language;
 }
 
-export default function Hero({ onGetStarted, isAuthenticated }: HeroProps) {
+export default function Hero({ onGetStarted, isAuthenticated, lang }: HeroProps) {
+    const t = translations[lang].hero;
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
             {/* Animated background elements */}
@@ -17,18 +21,20 @@ export default function Hero({ onGetStarted, isAuthenticated }: HeroProps) {
                     <h1 className="text-6xl md:text-8xl font-bold mb-6 gradient-text">
                         FitTrack Pro
                     </h1>
-                    <p className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto">
-                        Kişiselleştirilmiş antrenman planlarıyla fitness hedeflerinize ulaşın
+                    <p className="text-2xl md:text-3xl text-white font-black mb-6 max-w-3xl mx-auto font-outfit uppercase tracking-tighter">
+                        {t.subtitle}
                     </p>
-                    <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
-                        Google hesabınızla giriş yapın, kas grubunuzu seçin, ekipmanlarınızı belirleyin ve size özel antrenman programınızı hemen alın!
+                    <p className="text-lg md:text-xl text-gray-300 font-bold mb-12 max-w-2xl mx-auto leading-relaxed">
+                        {lang === 'tr'
+                            ? 'Google hesabınızla giriş yapın, kas grubunuzu seçin, ekipmanlarınızı belirleyin ve size özel antrenman programınızı hemen alın!'
+                            : 'Login with your Google account, select your muscle group, set your equipment, and get your personalized workout program instantly!'}
                     </p>
 
                     <button
                         onClick={onGetStarted}
-                        className="btn-primary px-12 py-4 rounded-full text-xl font-bold text-white shadow-2xl hover:shadow-indigo-500/50 transition-all"
+                        className="btn-primary px-12 py-4 rounded-full text-xl font-black text-white shadow-2xl hover:shadow-indigo-500/50 transition-all font-outfit"
                     >
-                        {isAuthenticated ? 'Antrenman Başlat' : 'Hemen Başla'}
+                        {isAuthenticated ? (lang === 'tr' ? 'Antrenman Başlat' : 'Start Workout') : t.getStarted}
                     </button>
                 </div>
 
@@ -36,25 +42,31 @@ export default function Hero({ onGetStarted, isAuthenticated }: HeroProps) {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 animate-fade-in" style={{ animationDelay: '0.3s' }}>
                     <div className="glass p-8 rounded-2xl hover:scale-105 transition-transform">
                         <div className="text-5xl mb-4">🎯</div>
-                        <h3 className="text-xl font-bold mb-2">Kişiselleştirilmiş Planlar</h3>
-                        <p className="text-gray-400">
-                            Hedeflerinize ve ekipmanlarınıza göre özel antrenman programları
+                        <h3 className="text-xl font-black mb-2 font-outfit">{t.features.personalized}</h3>
+                        <p className="text-gray-300 font-semibold">
+                            {lang === 'tr'
+                                ? 'Hedeflerinize ve ekipmanlarınıza göre özel antrenman programları'
+                                : 'Custom workout programs based on your goals and equipment'}
                         </p>
                     </div>
 
                     <div className="glass p-8 rounded-2xl hover:scale-105 transition-transform" style={{ animationDelay: '0.1s' }}>
                         <div className="text-5xl mb-4">📊</div>
-                        <h3 className="text-xl font-bold mb-2">İlerleme Takibi</h3>
-                        <p className="text-gray-400">
-                            Gelişiminizi görselleştirin ve motivasyonunuzu artırın
+                        <h3 className="text-xl font-black mb-2 font-outfit">{t.features.tracking}</h3>
+                        <p className="text-gray-300 font-semibold">
+                            {lang === 'tr'
+                                ? 'Gelişiminizi görselleştirin ve motivasyonunuzu artırın'
+                                : 'Visualize your development and boost your motivation'}
                         </p>
                     </div>
 
                     <div className="glass p-8 rounded-2xl hover:scale-105 transition-transform" style={{ animationDelay: '0.2s' }}>
                         <div className="text-5xl mb-4">🎥</div>
-                        <h3 className="text-xl font-bold mb-2">Video Rehberler</h3>
-                        <p className="text-gray-400">
-                            Her hareket için YouTube video linkleriyle doğru teknik
+                        <h3 className="text-xl font-black mb-2 font-outfit">{lang === 'tr' ? 'Video Rehberler' : 'Video Guides'}</h3>
+                        <p className="text-gray-300 font-semibold">
+                            {lang === 'tr'
+                                ? 'Her hareket için YouTube video linkleriyle doğru teknik'
+                                : 'Proper technique with YouTube video links for every move'}
                         </p>
                     </div>
                 </div>
@@ -62,3 +74,4 @@ export default function Hero({ onGetStarted, isAuthenticated }: HeroProps) {
         </section>
     );
 }
+

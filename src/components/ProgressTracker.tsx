@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { Language, translations } from '@/utils/translations';
 
 interface WorkoutSession {
     id: string;
@@ -11,8 +12,10 @@ interface WorkoutSession {
     notes: string;
 }
 
-export default function ProgressTracker() {
+export default function ProgressTracker({ lang }: { lang: Language }) {
+    const t = translations[lang].progress;
     const [timeRange, setTimeRange] = useState<'week' | 'month' | 'year'>('week');
+
     const [workoutSessions, setWorkoutSessions] = useState<WorkoutSession[]>([]);
     const [loading, setLoading] = useState(true);
     const supabase = createClient();
@@ -67,8 +70,10 @@ export default function ProgressTracker() {
         <div className="space-y-8">
             {/* Header */}
             <div className="text-center space-y-4">
-                <h2 className="text-4xl font-bold gradient-text">İlerleme Takibi</h2>
-                <p className="text-gray-400 text-lg">Antrenman geçmişinizi ve istatistiklerinizi görüntüleyin</p>
+                <h2 className="text-4xl font-bold gradient-text font-outfit">{t.title}</h2>
+                <p className="text-gray-400 text-lg">
+                    {lang === 'tr' ? 'Antrenman geçmişinizi ve istatistiklerinizi görüntüleyin' : 'View your workout history and statistics'}
+                </p>
             </div>
 
             {/* Time Range Selector */}
@@ -78,11 +83,11 @@ export default function ProgressTracker() {
                         key={range}
                         onClick={() => setTimeRange(range)}
                         className={`px-6 py-2 rounded-lg transition-all ${timeRange === range
-                                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
-                                : 'glass text-gray-400 hover:text-white'
+                            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
+                            : 'glass text-gray-400 hover:text-white'
                             }`}
                     >
-                        {range === 'week' ? 'Bu Hafta' : range === 'month' ? 'Bu Ay' : 'Bu Yıl'}
+                        {range === 'week' ? (lang === 'tr' ? 'Bu Hafta' : 'This Week') : range === 'month' ? (lang === 'tr' ? 'Bu Ay' : 'This Month') : (lang === 'tr' ? 'Bu Yıl' : 'This Year')}
                     </button>
                 ))}
             </div>
@@ -90,59 +95,59 @@ export default function ProgressTracker() {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="glass p-6 rounded-2xl space-y-2">
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-400">Toplam Antrenman</span>
+                    <div className="flex items-center justify-between font-medium">
+                        <span className="text-gray-400">{t.totalWorkouts}</span>
                         <span className="text-3xl">🏋️</span>
                     </div>
-                    <p className="text-4xl font-bold gradient-text">{stats.totalWorkouts}</p>
+                    <p className="text-4xl font-black gradient-text font-outfit">{stats.totalWorkouts}</p>
                 </div>
 
                 <div className="glass p-6 rounded-2xl space-y-2">
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-400">Toplam Süre</span>
+                    <div className="flex items-center justify-between font-medium">
+                        <span className="text-gray-400">{t.totalDuration}</span>
                         <span className="text-3xl">⏱️</span>
                     </div>
-                    <p className="text-4xl font-bold gradient-text">{stats.totalMinutes} dk</p>
+                    <p className="text-4xl font-black gradient-text font-outfit">{stats.totalMinutes} {t.minutes}</p>
                 </div>
 
                 <div className="glass p-6 rounded-2xl space-y-2">
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-400">Ortalama Süre</span>
+                    <div className="flex items-center justify-between font-medium">
+                        <span className="text-gray-400">{t.avgDuration}</span>
                         <span className="text-3xl">📊</span>
                     </div>
-                    <p className="text-4xl font-bold gradient-text">{stats.avgDuration} dk</p>
+                    <p className="text-4xl font-black gradient-text font-outfit">{stats.avgDuration} {t.minutes}</p>
                 </div>
 
                 <div className="glass p-6 rounded-2xl space-y-2">
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-400">Seri</span>
+                    <div className="flex items-center justify-between font-medium">
+                        <span className="text-gray-400">{lang === 'tr' ? 'Seri' : 'Streak'}</span>
                         <span className="text-3xl">🔥</span>
                     </div>
-                    <p className="text-4xl font-bold gradient-text">{stats.streak} gün</p>
+                    <p className="text-4xl font-black gradient-text font-outfit">{stats.streak} {lang === 'tr' ? 'gün' : 'days'}</p>
                 </div>
             </div>
 
             {workoutSessions.length === 0 ? (
                 <div className="glass p-12 rounded-2xl text-center space-y-4">
                     <p className="text-6xl">📝</p>
-                    <h3 className="text-2xl font-bold text-white">Henüz Kayıt Yok</h3>
+                    <h3 className="text-2xl font-bold text-white font-outfit">{lang === 'tr' ? 'Henüz Kayıt Yok' : 'No Records Yet'}</h3>
                     <p className="text-gray-400">
-                        İlk antrenmanınızı tamamladığınızda istatistikleriniz burada görünecek.
+                        {lang === 'tr' ? 'İlk antrenmanınızı tamamladığınızda istatistikleriniz burada görünecek.' : 'Your statistics will appear here once you complete your first workout.'}
                     </p>
                 </div>
             ) : (
                 <>
                     {/* Muscle Group Distribution */}
                     <div className="glass p-8 rounded-2xl space-y-6">
-                        <h3 className="text-2xl font-bold text-white">Kas Grubu Dağılımı</h3>
+                        <h3 className="text-2xl font-bold text-white font-outfit">{t.muscleDistribution}</h3>
                         <div className="space-y-4">
                             {Object.entries(muscleGroupDistribution).map(([muscle, count]) => {
                                 const percentage = (count / stats.totalWorkouts) * 100;
                                 return (
                                     <div key={muscle} className="space-y-2">
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-gray-300">{muscle}</span>
-                                            <span className="text-gray-400">{count} antrenman ({percentage.toFixed(0)}%)</span>
+                                            <span className="text-gray-300 font-medium">{muscle}</span>
+                                            <span className="text-gray-400">{count} {lang === 'tr' ? 'antrenman' : 'workouts'} ({percentage.toFixed(0)}%)</span>
                                         </div>
                                         <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
                                             <div
@@ -158,7 +163,7 @@ export default function ProgressTracker() {
 
                     {/* Recent Workouts */}
                     <div className="glass p-8 rounded-2xl space-y-6">
-                        <h3 className="text-2xl font-bold text-white">Son Antrenmanlar</h3>
+                        <h3 className="text-2xl font-bold text-white font-outfit">{t.recentActivity}</h3>
                         <div className="space-y-4">
                             {workoutSessions.map((session) => (
                                 <div
@@ -170,21 +175,19 @@ export default function ProgressTracker() {
                                             <span className="text-2xl">💪</span>
                                         </div>
                                         <div>
-                                            <p className="text-white font-semibold">{session.muscle_group}</p>
+                                            <p className="text-white font-semibold font-outfit">{session.muscle_group} Plan</p>
                                             <p className="text-gray-400 text-sm">
-                                                {new Date(session.date).toLocaleDateString('tr-TR', {
+                                                {new Date(session.date).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', {
                                                     day: 'numeric',
                                                     month: 'long',
-                                                    year: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit'
+                                                    year: 'numeric'
                                                 })}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-white font-semibold">{session.duration} dakika</p>
-                                        <p className="text-gray-400 text-sm">{session.notes}</p>
+                                        <p className="text-white font-semibold font-outfit">{session.duration} {t.minutes}</p>
+                                        <p className="text-gray-400 text-sm italic">{session.notes}</p>
                                     </div>
                                 </div>
                             ))}
@@ -196,9 +199,9 @@ export default function ProgressTracker() {
             {/* Motivational Message */}
             <div className="glass p-8 rounded-2xl text-center space-y-4">
                 <p className="text-2xl">🎯</p>
-                <p className="text-xl text-white font-semibold">Harika gidiyorsun!</p>
+                <p className="text-xl text-white font-semibold font-outfit">{lang === 'tr' ? 'Harika gidiyorsun!' : "You're doing great!"}</p>
                 <p className="text-gray-400">
-                    Düzenli antrenman yaparak hedeflerine ulaşıyorsun. Devam et!
+                    {lang === 'tr' ? 'Düzenli antrenman yaparak hedeflerine ulaşıyorsun. Devam et!' : 'You are reaching your goals with regular training. Keep it up!'}
                 </p>
             </div>
         </div>

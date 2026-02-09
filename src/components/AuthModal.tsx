@@ -2,13 +2,17 @@
 
 import { createClient } from '@/utils/supabase/client';
 import { useState } from 'react';
+import { Language, translations } from '@/utils/translations';
 
 interface AuthModalProps {
     onClose: () => void;
+    lang: Language;
 }
 
-export default function AuthModal({ onClose }: AuthModalProps) {
+export default function AuthModal({ onClose, lang }: AuthModalProps) {
+    const t = translations[lang].nav; // Reusing nav for login/logout or we can add specific ones
     const [isLoading, setIsLoading] = useState(false);
+
     const [error, setError] = useState<string | null>(null);
     const supabase = createClient();
 
@@ -43,9 +47,13 @@ export default function AuthModal({ onClose }: AuthModalProps) {
                 </button>
 
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold gradient-text mb-2">Giriş Yap</h2>
+                    <h2 className="text-3xl font-bold gradient-text mb-2 font-outfit">
+                        {lang === 'tr' ? 'Giriş Yap' : 'Login'}
+                    </h2>
                     <p className="text-gray-300">
-                        FitTrack Pro'ya hoş geldiniz! Devam etmek için Google hesabınızla giriş yapın.
+                        {lang === 'tr'
+                            ? "FitTrack Pro'ya hoş geldiniz! Devam etmek için Google hesabınızla giriş yapın."
+                            : "Welcome to FitTrack Pro! Please login with your Google account to continue."}
                     </p>
                 </div>
 
@@ -82,21 +90,21 @@ export default function AuthModal({ onClose }: AuthModalProps) {
                                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                                 />
                             </svg>
-                            <span>Google ile Giriş Yap</span>
+                            <span className="font-outfit">{lang === 'tr' ? 'Google ile Giriş Yap' : 'Login with Google'}</span>
                         </>
                     )}
                 </button>
 
                 <p className="text-sm text-gray-400 mt-6 text-center">
-                    Giriş yaparak{' '}
+                    {lang === 'tr' ? 'Giriş yaparak ' : 'By logging in, you accept the '}
                     <a href="#" className="text-indigo-400 hover:text-indigo-300">
-                        Kullanım Koşulları
+                        {lang === 'tr' ? 'Kullanım Koşulları' : 'Terms of Use'}
                     </a>{' '}
-                    ve{' '}
+                    {lang === 'tr' ? 've ' : 'and '}
                     <a href="#" className="text-indigo-400 hover:text-indigo-300">
-                        Gizlilik Politikası
+                        {lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}
                     </a>
-                    'nı kabul etmiş olursunuz.
+                    {lang === 'tr' ? "'nı kabul etmiş olursunuz." : "."}
                 </p>
             </div>
         </div>
