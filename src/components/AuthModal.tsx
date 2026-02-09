@@ -22,15 +22,9 @@ export default function AuthModal({ onClose, lang }: AuthModalProps) {
             setError(null);
 
             const getURL = () => {
-                let url =
-                    process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this in Vercel
-                    process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Automatically set by Vercel
-                    window.location.origin;
-                // Make sure to include `https://` when not localhost
-                url = url.includes('http') ? url : `https://${url}`;
-                // Add trailing slash if missing
-                url = url.charAt(url.length - 1) === '/' ? url : `${url}/`;
-                return url;
+                const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sport-manager-brkbnkl.vercel.app';
+                // Ensure URL ends with a slash
+                return siteUrl.endsWith('/') ? siteUrl : `${siteUrl}/`;
             };
 
             const { error } = await supabase.auth.signInWithOAuth({
