@@ -21,10 +21,22 @@ export default function AuthModal({ onClose, lang }: AuthModalProps) {
             setIsLoading(true);
             setError(null);
 
+            const getURL = () => {
+                let url =
+                    process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this in Vercel
+                    process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Automatically set by Vercel
+                    window.location.origin;
+                // Make sure to include `https://` when not localhost
+                url = url.includes('http') ? url : `https://${url}`;
+                // Add trailing slash if missing
+                url = url.charAt(url.length - 1) === '/' ? url : `${url}/`;
+                return url;
+            };
+
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/auth/callback`,
+                    redirectTo: `${getURL()}auth/callback`,
                 },
             });
 
